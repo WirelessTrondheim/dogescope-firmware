@@ -2,7 +2,7 @@
 
 Firmware for the DogeScope.
 
-DogeScope is a strpiped down version of the OpenScope MZ from Digilent.
+DogeScope is a stripped down version of the OpenScope MZ from Digilent.
 
 Main objectives of DogeScope firmware is:
 
