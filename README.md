@@ -1,4 +1,15 @@
-# OpenScope MZ
+# DogeScope Firmware
+
+Firmware for the DogeScope.
+
+DogeScope is a strpiped down version of the OpenScope MZ from Digilent.
+
+Main objectives of DogeScope firmware is:
+
+1. Remove WIFI module
+2. Remove all other features than the oscilloscope and the logic analyzer
+
+# OpenScope MZ (Deprecated)
 
 Firmware for the OpenScope MZ - an open source, multi-function, electronic instrumentation device that can be controlled using a computer or mobile device.
 
