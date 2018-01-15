@@ -6,8 +6,9 @@ DogeScope is a stripped down version of the OpenScope MZ from Digilent.
 
 Main objectives of DogeScope firmware is:
 
-1. Remove WIFI module
-2. Remove all other features than the oscilloscope and the logic analyzer
+1. Remove all features, including the WIFI module, except the oscilloscope and the logic analyzer
+2. Remove dependency to Arduino
+3. One-click project setup in IDE8
 
 # OpenScope MZ (Deprecated)
 
