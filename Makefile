@@ -50,7 +50,8 @@ COREOBJFILES:= cpp-startup.o crti.o crtn.o pic32_software_reset.o\
 all: ${OBJFILES} core.a
 
 
-core.a: ${COREOBJFILES} 
+core.a: ${COREOBJFILES}
+	${RM} core.a 
 	${AR} rcs $@ $^
 
 OpenScope.ino.elf: ${OBJFILES} core.a
@@ -67,19 +68,19 @@ OpenScope.ino.elf: ${OBJFILES} core.a
 %.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/libraries/MRF24G/utility/%.c
+%.o: libraries/MRF24G/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/libraries/MRF24G/%.c
+%.o: libraries/MRF24G/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/libraries/FLASHVOL/%.c
+%.o: libraries/FLASHVOL/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/libraries/DFATFS/utility/%.c
+%.o: libraries/DFATFS/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/libraries/DEIPcK/utility/%.c
+%.o: libraries/DEIPcK/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 %.o: %.c
