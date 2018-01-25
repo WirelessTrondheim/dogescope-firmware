@@ -1,6 +1,8 @@
 CC:=${HOME}/.arduino15/packages/Digilent/tools/xc32-tools/xc32-1.43/bin/xc32-gcc
 CXX:=${HOME}/.arduino15/packages/Digilent/tools/xc32-tools/xc32-1.43/bin/xc32-g++
 AR:=${HOME}/.arduino15/packages/Digilent/tools/xc32-tools/xc32-1.43/bin/xc32-ar
+OBJCPY:=${HOME}/.arduino15/packages/Digilent/tools/xc32-tools/xc32-1.43/bin/xc32-objcopy
+BIN2HEX:=${HOME}/.arduino15/packages/Digilent/tools/xc32-tools/xc32-1.43/bin/xc32-bin2hex
 
 CFLAGS:=-g -O0 -w -mno-smart-io -ffunction-sections -fdata-sections -mdebugger\
         -Wcast-align -fno-short-double -ftoplevel-reorder -MMD  -mnewlib-libc\
@@ -47,19 +49,35 @@ COREOBJFILES:= cpp-startup.o crti.o crtn.o pic32_software_reset.o\
                IPAddress.o Print.o Stream.o Tone.o WMath.o WString.o doprnt.o\
                main.o
 
-all: ${OBJFILES} core.a
+DEPFILES:=$(OBJFILES:.o=.d) $(COREOBJFILES:.o=.d)
 
+all: OpenScope.ino.eep OpenScope.ino.hex
+
+
+clean:
+	${RM} ${COREOBJFILES} ${OBJFILES} ${DEPFILES} core.a OpenScope.ino.elf OpenScope.ino.eep OpenScope.ino.hex
 
 core.a: ${COREOBJFILES}
 	${RM} core.a 
 	${AR} rcs $@ $^
 
+
 OpenScope.ino.elf: ${OBJFILES} core.a
-	$(CXX) -w -Wl,--save-gld=sketch.ld,-Map=sketch.map,--gc-sections -mdebugger -mno-peripheral-libs\
-        -nostartfiles -mnewlib-libc -mprocessor=32MZ2048EFG124 -o $@\
+	$(CXX) -w -Wl,--save-gld=sketch.ld,-Map=sketch.map,--gc-sections\
+        -mdebugger -mno-peripheral-libs -nostartfiles -mnewlib-libc\
+        -mprocessor=32MZ2048EFG124 -o $@\
         ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/cpp-startup.S ${OBJFILES} core.a -L.\
         -T ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope/OpenScope.ld\
         -T ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/chipKIT-application-COMMON-MZ.ld
+
+
+OpenScope.ino.eep: OpenScope.ino.elf
+	${OBJCPY} -O ihex -j .eeprom --set-section-flags=.eeprom=alloc,load\
+        --no-change-warnings --change-section-lma .eeprom=0  $< $@
+
+
+OpenScope.ino.hex: OpenScope.ino.elf
+	${BIN2HEX} -a  $<
 
 
 %.o: %.c
