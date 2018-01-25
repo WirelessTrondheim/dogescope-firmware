@@ -62,6 +62,9 @@ OpenScope.ino.elf: ${OBJFILES} core.a
         -T ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/chipKIT-application-COMMON-MZ.ld
 
 
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
 %.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
@@ -83,9 +86,9 @@ OpenScope.ino.elf: ${OBJFILES} core.a
 %.o: libraries/DEIPcK/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
 
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 %.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -120,5 +123,3 @@ OpenScope.ino.elf: ${OBJFILES} core.a
 %.o: libraries/DEIPcK/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-%.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
