@@ -39,7 +39,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
 
     // for setting gain
     static HINSTR   hInstrt = NULL;
-    
+
     // for general use
     static STATE nextState = Idle;
     static uint32_t u32t1 = 0;
@@ -80,7 +80,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 szInput[0] = Serial.read();
                 cbInput = 1;
                 switch(szInput[0])
-                {                        
+                {
                 case '1':
                     memcpy(szInput, szModeJSON, sizeof(szModeJSON)-1);
                     cbInput = sizeof(szModeJSON)-1;
@@ -128,7 +128,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 default:
                     Serial.println("Unsupported option, please try again");
                     // fall thru
-                    
+
                 case '\n':
                 case '\0':// just a carriage return
                     state = UIMainMenu;
@@ -166,7 +166,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
         /************************************************************************/
         /************************************************************************/
         case UIJSONMain:
-            if(Serial.available() > 0) 
+            if(Serial.available() > 0)
             {
                 szInput[0] = Serial.read();
 
@@ -204,10 +204,10 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             if(Serial.available() > 0)
             {
                 while(Serial.available() > 0 && cbInput < sizeof(szInput)) szInput[cbInput++] = Serial.read();
-                state = UIJSONProcessJSON;      
+                state = UIJSONProcessJSON;
             }
             break;
-                        
+
         case UIJSONProcessJSON:
             switch(oslex.StreamOS(szInput, cbInput))
             {
@@ -225,7 +225,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 case GCMD::DONE:
                     state = UIJSONDone;
                     break;
-             
+
                 case GCMD::WRITE:
                     cbOutput = oslex.cbOutput;
                     pbOutput = oslex.pbOutput;
@@ -292,9 +292,9 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 szInput[0] = Serial.read();
                 cbInput = 1;
                 switch(szInput[0])
-                {                        
+                {
                 case '1':
-                    endScanState = UIWalkScan;       
+                    endScanState = UIWalkScan;
                     nextScanWalk = UIPrtWiFiInfo;
                     endScanWalk = UIManageWiFi;
                     state = UIAskToShutdownWiFi;
@@ -303,7 +303,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 case '2':
                     memcpy((void *) &wifiConn.comhdr.idhdr.mac , &macOpenScope, sizeof(wifiConn.comhdr.idhdr.mac));
                     u32t1 = 1;
-                    endScanState = UIWalkFiles;       
+                    endScanState = UIWalkFiles;
                     walkVol = wifiVol;
                     walkFileEntry = UICheckFileName;
                     walkFileDone = UIWaitForNetwork;
@@ -322,7 +322,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 case '4':
                     state = UIAddWiFiConnection;
                     break;
-                    
+
                 case '5':
                     Serial.println("Select connection to delete");
                     u32t1 = 1;
@@ -343,7 +343,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 default:
                     Serial.println("Unsupported option, please try again");
                     // fall thru
-                    
+
                 case '\n':
                 case '\0':// just a carriage return
                     state = UIManageWiFi;
@@ -356,7 +356,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
-        
+
         /************************************************************************/
         /************************************************************************/
         /********************** OSC Gain Setting   ******************************/
@@ -385,7 +385,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 cbInput = 1;
                 state = UIOSCSetGainOffset;
                 switch(szInput[0])
-                {                        
+                {
                 case '1':
                     Serial.println("OSC1 gain set to 1");
                     hInstrt = instrGrp.rghInstr[OSC1_ID];
@@ -409,7 +409,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                     hInstrt = instrGrp.rghInstr[OSC1_ID];
                     iFileWalk = 4;
                     break;
-                    
+
                 case '5':
                     Serial.println("OSC2 gain set to 1");
                     hInstrt = instrGrp.rghInstr[OSC2_ID];
@@ -433,7 +433,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                     hInstrt = instrGrp.rghInstr[OSC2_ID];
                     iFileWalk = 4;
                     break;
-                    
+
                 case '9':
                     state = UIMainMenu;
                     break;
@@ -441,7 +441,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 default:
                     Serial.println("Unsupported option, please try again");
                     // fall thru
-                    
+
                 case '\n':
                 case '\0':// just a carriage return
                     state = UISetOSCGain;
@@ -474,7 +474,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             {
                 Serial.println("The WiFi connection must be dropped to proceed");
                 Serial.println("Is it okay to shutdown the WiFi connection? Y/N");
-                state = UIWaitForShutdownReply;                        
+                state = UIWaitForShutdownReply;
             }
             else
             {
@@ -516,7 +516,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
-
+#ifdef USE_WIFI
         case UIWiFiScan:
             if((retState = WiFiScan(pjcmd.iWiFi.wifiScan)) == Idle)
             {
@@ -529,7 +529,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-
+#endif
         /************************************************************************/
         /************************************************************************/
         /********************** Walk the Scan data ******************************/
@@ -539,7 +539,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
         /************************************************************************/
         /************************************************************************/
         case UIWalkScan:
-            
+
             if(pjcmd.iWiFi.wifiScan.iNetwork < pjcmd.iWiFi.wifiScan.cNetworks)
             {
                 if(!deIPcK.getScanInfo(pjcmd.iWiFi.wifiScan.iNetwork, &pjcmd.iWiFi.wifiScan.scanInfo))
@@ -555,7 +555,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = endScanWalk;
             }
             break;
-            
+#ifdef USE_WIFI
         /************************************************************************/
         /************************************************************************/
         /********************** WiFi connect / disconnect ***********************/
@@ -592,7 +592,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-
+#endif
         /************************************************************************/
         /************************************************************************/
         /********************** Walk the file system ****************************/
@@ -742,7 +742,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             break;
 
         case UICalibrateInstruments:
-            if((retState = CFGCalibrateInstruments(instrGrp)) == Idle) 
+            if((retState = CFGCalibrateInstruments(instrGrp)) == Idle)
             {
                 Serial.print("Calibration time was: ");
                 Serial.print(instrGrp.tStart);
@@ -808,7 +808,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             break;
 
         case UISaveCalibration:
-            if((retState = CFGSaveCalibration(instrGrp, VOLSD, CFGSD)) == Idle) 
+            if((retState = CFGSaveCalibration(instrGrp, VOLSD, CFGSD)) == Idle)
             {
                 Serial.print("Calibration was saved");
                 state = UIMainMenu;
@@ -837,11 +837,11 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 if(cbPrefix < cbInput && memcmp(sz, szInput, cbPrefix) == 0)
                 {
                     // this will include the terminating null
-                    // remember that we index past the '_', 
+                    // remember that we index past the '_',
                     // so the length is one to long when calculating the size
                     // and that will include the null when memcpy
                     // use memcpy instead of strcpy because it is in place
-                    memcpy(szInput, &szInput[cbPrefix+1], cbInput-cbPrefix);    
+                    memcpy(szInput, &szInput[cbPrefix+1], cbInput-cbPrefix);
                     pjcmd.iWiFi.wifiScan.iNetwork = 0;
                     nextScanWalk = nextState;
                     endScanWalk = UIProcessFileEntry;
@@ -853,7 +853,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
- 
+
         case UICheckFileAgainstScan:
             {
                 // a match
@@ -876,11 +876,11 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             if(IOReadLine(szInput, sizeof(szInput)) == Idle)
             {
                 uint32_t index  = atoi(szInput);
-                    
+
                 if(0 < index && index < u32t1)
-                {                    
+                {
                     u32t1 = index;
-                    endScanState = UIWalkFiles;       
+                    endScanState = UIWalkFiles;
                     walkVol = wifiVol;
                     walkFileEntry = UICheckFileName;
                     walkFileDone = UIManageWiFi;
@@ -894,7 +894,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
- 
+
         case UICheckFileAgainstSelection:
             {
                 // a match
@@ -971,7 +971,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
             if(IOReadLine(szInput, sizeof(szInput)) == Idle)
             {
                 uint32_t index  = atoi(szInput);
-                
+
                 if(0 < index && index < u32t1)
                 {
                     u32t1 = index;
@@ -988,7 +988,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
 
             }
             break;
-  
+
         case UICheckWiFiConnectionToDelete:
             {
                 char szWiFiPrefix[32];
@@ -1087,7 +1087,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                                                                                        Serial.println((pjcmd.iWiFi.wifiScan.scanInfo.apConfig & 0b00000001), 10);
 
                 Serial.print("Count of support bit rates: ");
-                Serial.println(pjcmd.iWiFi.wifiScan.scanInfo.cBasicRates, 10);    
+                Serial.println(pjcmd.iWiFi.wifiScan.scanInfo.cBasicRates, 10);
 
                 for( j= 0; j< pjcmd.iWiFi.wifiScan.scanInfo.cBasicRates; j++)
                 {
@@ -1108,7 +1108,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
         /************************************************************************/
         case UIAddWiFiConnection:
             u32t1 = 1;
-            endScanState = UIWalkScan;       
+            endScanState = UIWalkScan;
             nextScanWalk = UICheckNetwork;
             endScanWalk = UIWaitForNetworkSelection;
             state = UIAskToShutdownWiFi;
@@ -1123,23 +1123,23 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
 
                 // if we don't have a file for it already
                 if(     !(DFATFS::fschdrive(DFATFS::szFatFsVols[wifiVol]) == FR_OK && DFATFS::fschdir(DFATFS::szRoot) == FR_OK && DFATFS::fsexists(szInput)) &&
-                        pjcmd.iWiFi.wifiScan.scanInfo.bssType == DEWF_INFRASTRUCTURE && 
+                        pjcmd.iWiFi.wifiScan.scanInfo.bssType == DEWF_INFRASTRUCTURE &&
                         (((pjcmd.iWiFi.wifiScan.scanInfo.apConfig & 0b11000000) != 0) ||  ((pjcmd.iWiFi.wifiScan.scanInfo.apConfig & 0b00010000) == 0)) )  // WPA OR no security
                 {
                     Serial.print(u32t1++, 10);
                     Serial.print(". ");
                     Serial.println(sz);
                 }
-                
+
                 state = UIWalkScan;
             }
             break;
-                       
+
         case UIWaitForNetworkSelection:
             if(IOReadLine(szInput, sizeof(szInput)) == Idle)
             {
                 uint32_t index  = atoi(szInput);
-                    
+
                 if(index == 0)
                 {
                     Serial.println("No selection made, exiting menu");
@@ -1150,7 +1150,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                     Serial.println("Invalid selection, try again");
                 }
                 else
-                {                    
+                {
                     u32t1 = index;
                     pjcmd.iWiFi.wifiScan.iNetwork = 0;
                     nextScanWalk = UIGetNetwork;
@@ -1169,7 +1169,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
 
                 state = UIWalkScan;
                 if( !(DFATFS::fschdrive(DFATFS::szFatFsVols[wifiVol]) == FR_OK &&  DFATFS::fschdir(DFATFS::szRoot) == FR_OK  &&  DFATFS::fsexists(szInput)) &&
-                    pjcmd.iWiFi.wifiScan.scanInfo.bssType == DEWF_INFRASTRUCTURE && 
+                    pjcmd.iWiFi.wifiScan.scanInfo.bssType == DEWF_INFRASTRUCTURE &&
                     (((pjcmd.iWiFi.wifiScan.scanInfo.apConfig & 0b11000000) != 0) || ((pjcmd.iWiFi.wifiScan.scanInfo.apConfig & 0b00010000) == 0)) && // WPA OR no security
                     (--u32t1) == 0 )
                 {
@@ -1189,7 +1189,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 // No security
                 wifiConn.wifiKey = DEWF_SECURITY_OPEN;
                 Serial.print("Using Open Security Network for: ");
-                Serial.println(wifiConn.ssid);  
+                Serial.println(wifiConn.ssid);
                 nextState = UIDisconnectAfterConnect;
                 state = UIWiFiConnect;
             }
@@ -1205,11 +1205,11 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
 
                 Serial.print("Please enter PassPhrase for: ");
-                Serial.println(wifiConn.ssid);        
+                Serial.println(wifiConn.ssid);
                 state = UIReadPassPhrase;
             }
             break;
-                
+
         case UIReadPassPhrase:
             if(IOReadLine(szInput, sizeof(szInput)) == Idle)
             {
@@ -1217,7 +1217,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 {
                     Serial.println("PassPhrase is too long.");
                     Serial.print("Please enter PassPhrase for: ");
-                    Serial.println(wifiConn.ssid);        
+                    Serial.println(wifiConn.ssid);
                 }
                 else
                 {
@@ -1242,7 +1242,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-        
+
         case UIAskToAutoSave:
                 Serial.println("Would you like to auto-connect to this network? Y/N");
                 state = UIReadAutoConnect;
@@ -1282,7 +1282,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
-
+#ifdef USE_WIFI
         case UISaveWiFiConnection:
             if((retState = WiFiSaveConnInfo(dFile, wifiVol, wifiConn)) == Idle)
             {
@@ -1301,7 +1301,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-
+#endif
         case UIAskToDisconnect:
             Serial.println("Do you want to stay connected to this network? Y/N");
             state = UIDisconnectAfterConnect;
@@ -1340,7 +1340,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
             break;
-            
+
         /************************************************************************/
         /************************************************************************/
         /****************************** Default   *******************************/
@@ -1461,7 +1461,7 @@ STATE IOWriteFile(DFILE& dFile, VOLTYPE const vol, char const * const szFileName
                 if(cbWrite == 0)
                 {
                     dFile.fsclose();
-                                        
+
                     state = Idle;
                     return(Idle);
                 }
@@ -1515,7 +1515,7 @@ STATE IOReadLine(char * szInput, uint32_t cb)
                 while(Serial.available() > 0 && index < cb)
                 {
                     szInput[index] = Serial.read();
-                    
+
                     if(szInput[index] == '\n' || szInput[index] == '\r' || index == cb-1)
                     {
                         szInput[index] = '\0';
@@ -1583,7 +1583,7 @@ STATE IOReadFileN(DFILE& dFile, VOLTYPE const vol, char const * const szFileName
 
         case IORead:
             {
-                uint32_t cbTotal    = min((dFile.fssize() - iSeek), cbMax); 
+                uint32_t cbTotal    = min((dFile.fssize() - iSeek), cbMax);
                 uint32_t iBuff      = dFile.fstell() - iSeek;
                 uint32_t cbToRead   = cbTotal - iBuff;
                 uint32_t cbRead     = 0;
@@ -1680,11 +1680,11 @@ STATE IOWriteFileN(DFILE& dFile, VOLTYPE const vol, char const * const szFileNam
                 // if we are done
                 else if(cbWrite == 0)
                 {
-                    dFile.fsclose();                                       
+                    dFile.fsclose();
                     state = Idle;
                     return(Idle);
                 }
-                else if(iSeek != dFile.fstell())   
+                else if(iSeek != dFile.fstell())
                 {
                     dFile.fsclose();
                     state = Idle;
@@ -1714,6 +1714,3 @@ STATE IOWriteFileN(DFILE& dFile, VOLTYPE const vol, char const * const szFileNam
 
     return(state);
 }
-
-
-

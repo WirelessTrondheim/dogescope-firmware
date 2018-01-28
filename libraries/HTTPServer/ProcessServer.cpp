@@ -9,12 +9,12 @@
 /*    Author:     Keith Vogel                                           */
 /*    Copyright 2013, Digilent Inc.                                     */
 /************************************************************************/
-/* 
+/*
 *
 * Copyright (c) 2013-2014, Digilent <www.digilentinc.com>
 * Contact Digilent for the latest version.
 *
-* This program is free software; distributed under the terms of 
+* This program is free software; distributed under the terms of
 * BSD 3-clause license ("Revised BSD License", "New BSD License", or "Modified BSD License")
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -51,7 +51,7 @@ extern "C" void __attribute__((noreturn)) _softwareReset(void);
 
 #define CBDATETIME          32
 #define TooMuchTime()       (SYSGetMilliSecond() - tStartTimeOut > cSecTimeout * 1000)
-#define RestartTimer()      tStartTimeOut = SYSGetMilliSecond() 
+#define RestartTimer()      tStartTimeOut = SYSGetMilliSecond()
 #define SetTimeout(cSec)    {cSecTimeout = cSec;}
 
 #define cSecFastRest        10
@@ -67,7 +67,7 @@ static uint32_t cSecRest = cSecInitRest;
 static IPv4         ipMy;
 static IPv4         rgTempDNS[8];
 
-typedef enum 
+typedef enum
 {
     // enumerate these number to make sure we match the host
     // sending these commands
@@ -99,7 +99,7 @@ typedef enum
     SOFTMCLR,
     MCLRWAIT,
     WAITFORTIMEOUT,
-    ERROR    
+    ERROR
 } STATECMD;
 
 static STATECMD state = DYNAMICIPBEGIN;
@@ -156,24 +156,24 @@ bool HTTPEnable(bool fEnable)
     {
         return(false);
     }
- 
+
     return(true);
 }
 /***    void ServerSetup()
  *
  *    Parameters:
  *          None
- *              
+ *
  *    Return Values:
  *          None
  *
- *    Description: 
- *    
+ *    Description:
+ *
  *      Initialized the Web Server Network parameters
- *      
- *      
+ *
+ *
  * ------------------------------------------------------------ */
-void ServerSetup(void) 
+void ServerSetup(void)
 {
     uint32_t i = 0;
 
@@ -223,12 +223,12 @@ void ServerSetup(void)
  *
  *    Parameters:
  *          None
- *              
+ *
  *    Return Values:
  *          None
  *
- *    Description: 
- *    
+ *    Description:
+ *
  *      This is the main server loop. It:
  *          1. Scans for WiFi connections
  *          2. Connects to a WiFi by SSID
@@ -238,23 +238,23 @@ void ServerSetup(void)
  *          6. Accepts client connections
  *          7. Schedules the processing on client connections in a round robin yet fashion (cooperative execution).
  *          8. Automatically restart if the network goes down
- *      
+ *
  *      This illistrates how to write a state machine like loop
  *      so that the PeriodicTask is called everytime through the loop
  *      so the stack stay alive and responsive.
  *
  *      In the loop we listen for a request, verify it to a limited degree
  *      and then broadcast the Magic Packet to wake the request machine.
- *      
+ *
  * ------------------------------------------------------------ */
 void ProcessServer(void)
-{   
+{
     uint32_t i               = 0;
 
   // see if we exceeded our timeout value.
-  // then just be done and close the socket 
+  // then just be done and close the socket
   // by default, a closed client is never connected
-  // so it is safe to call isConnected() even if it is closed 
+  // so it is safe to call isConnected() even if it is closed
   if(stateTimeOut != NONE && TooMuchTime())
   {
     Serial.println("Timeout occured");
@@ -264,7 +264,8 @@ void ProcessServer(void)
   }
 
   switch(state)
-  {    
+  {
+#ifdef USE_WIFI
         case WIFICONNECT:
             {
                 STATE retState = WiFiConnect(pjcmd.iWiFi.wifiAConn, false);
@@ -284,7 +285,7 @@ void ProcessServer(void)
                 }
             }
             break;
-
+#endif
     case DYNAMICIPBEGIN:
 
         deIPcK.begin();
@@ -293,8 +294,8 @@ void ProcessServer(void)
         RestartTimer();
         break;
 
-    case STATICIPBEGIN: 
-        
+    case STATICIPBEGIN:
+
         Serial.println("Static begin");
 
         // start again with static IP addresses
@@ -352,7 +353,7 @@ void ProcessServer(void)
         break;
 
     case GETNETADDRESSES:
-        
+
         // at this point we know we are initialized and
         // I can get my network address as assigned by DHCP
         // I want to save them so I can restart with them
@@ -376,7 +377,7 @@ void ProcessServer(void)
 
         RestartTimer();
         break;
-    
+
     case MAKESTATICIP:
 
         // build the requested IP for this subnet
@@ -387,7 +388,7 @@ void ProcessServer(void)
         if(localStaticIP != 0 && (ipMyStatic.u32 & subnetMask.u32) == (ipGateway.u32 & subnetMask.u32))
         {
             // if so, restart the IP stack and
-            // use our static IP  
+            // use our static IP
             state = ENDPASS1;
         }
 
@@ -435,7 +436,7 @@ void ProcessServer(void)
             rgClient[i].pTCPClient = NULL;
         }
         tcpServer.close();
-        
+
         // terminate our internet engine
         deIPcK.end();
 
@@ -447,7 +448,7 @@ void ProcessServer(void)
         state = WIFICONNECTWITHKEY;
 #else
         state = STATICIPBEGIN;
-#endif 
+#endif
 
         stateTimeOut = RESTARTREST;
         RestartTimer();
@@ -516,7 +517,7 @@ void ProcessServer(void)
         state = STARTLISTENING;
         break;
 
-    case STARTLISTENING:   
+    case STARTLISTENING:
         // we know we are initialized, and our broadcast UdpClient is ready
         // we should just be able to start listening on our TcpIP port
         tcpServer.close();
@@ -534,7 +535,7 @@ void ProcessServer(void)
     // this will timeout if we don't start listening
     case LISTENING:
         if((i = tcpServer.isListening(&status)) > 0)
-        {          
+        {
             IPEndPoint  ep;
 
             Serial.print(i, 10);
@@ -549,12 +550,12 @@ void ProcessServer(void)
 
             state = CHECKING;
             stateTimeOut = NONE;
-            
+
             // reset the rest time
             // things are looking good
             cSecRest = cSecInitRest;
         }
-        
+
         // something bad happened
         else if(IsIPStatusAnError(status))
         {
@@ -562,7 +563,7 @@ void ProcessServer(void)
             RestartTimer();
         }
         break;
- 
+
     case NOTLISTENING:
 
         // get the listening error and do something about it
@@ -624,7 +625,7 @@ void ProcessServer(void)
         }
 
         if(tcpServer.availableClients() > 0)
-        {            
+        {
             // find an open client
             // process the next client to be processed
             i = iNextClientToProcess;
@@ -634,14 +635,14 @@ void ProcessServer(void)
                     // clear the packet
                     memset(&rgClient[i], 0, sizeof(CLIENTINFO));
                     if((rgClient[i].pTCPClient = tcpServer.acceptClient()) != NULL)
-                    {                        
+                    {
                         Serial.print("Got a client: 0x");
                         Serial.println((uint32_t) &rgClient[i], 16);
- 
+
                         // set the timer so if something bad happens with the client
                         // we won't hang, also we don't need to check errors on the client
                         // becasue we will just timeout if there is an error
-                        RestartTimer();   
+                        RestartTimer();
                     }
                     else
                     {
@@ -657,7 +658,7 @@ void ProcessServer(void)
             state = NOTLISTENING;
         }
         break;
-      
+
     case RESTARTNOW:
         stateTimeOut = NONE;
         stateNext = TRYAGAIN;
@@ -683,7 +684,7 @@ void ProcessServer(void)
         break;
 
     case SHUTDOWN:  // nobody should call this but TEMINATE and RESTARTREST
- 
+
         Serial.println("Shutting down");
 
         // this is probably not neccessary but good
@@ -695,32 +696,32 @@ void ProcessServer(void)
             rgClient[i].pTCPClient = NULL;
         }
         tcpServer.close();
-        
+
 #if defined(USING_WIFI)
         // disconnect the WiFi, this will free the connection ID as well.
         state = WIFIDISCONNECT;
 #else
         // terminate our internet engine
         deIPcK.end();
-        
+
         // make sure we don't hit our timeout code
         stateTimeOut = NONE;
         state = stateNext;
         stateNext = RESTARTREST;
-        
-#endif       
-        break;
 
+#endif
+        break;
+#ifdef USE_WIFI
     case WIFIDISCONNECT:
         if(WiFiDisconnect() == Idle)
         {
             // make sure we don't hit our timeout code
             stateTimeOut = NONE;
             state = stateNext;
-            stateNext = RESTARTREST;           
+            stateNext = RESTARTREST;
         }
         break;
-        
+#endif
     case RESTFORAWHILE:
         {
             static bool fFirstEntry = true;
@@ -776,9 +777,9 @@ void ProcessServer(void)
     case TRYAGAIN:
         stateNext = RESTARTREST;
         stateTimeOut = RESTARTREST;
-        
+
         // TODO, ASSUMES WIFI????
-        state = WIFICONNECT;  
+        state = WIFICONNECT;
         RestartTimer();
         break;
 
@@ -812,7 +813,7 @@ void ProcessServer(void)
         state = RESTARTREST;
         break;
     }
-  
+
     // process only 1 of the clients in a round robin fashion.
     cWorkingClients = 0;
     i = iNextClientToProcess;
@@ -842,8 +843,8 @@ void ProcessServer(void)
 
                 case GCMD::CONTINUE:
                 case GCMD::READ:
-                case GCMD::WRITE:  
-                case GCMD::DONE:  
+                case GCMD::WRITE:
+                case GCMD::DONE:
                 default:
                     break;
             }
@@ -853,4 +854,3 @@ void ProcessServer(void)
         ++i %=  cMaxSocketsToListen;
     } while(i != iNextClientToProcess);
 }
-

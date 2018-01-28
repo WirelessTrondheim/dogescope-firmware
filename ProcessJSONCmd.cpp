@@ -36,8 +36,8 @@ static void ALogProcess(IALOG& ialog)
                 // make sure the file is closed
                 if(dFile) dFile.fsclose();
 
-                ialog.bidx.cTotalSamples    = 0;    // total number of valid samples          
-                ialog.bidx.iDMAEnd          = 0;    // end of valid data in DMA buffer   
+                ialog.bidx.cTotalSamples    = 0;    // total number of valid samples
+                ialog.bidx.iDMAEnd          = 0;    // end of valid data in DMA buffer
                 ialog.bidx.cDMARoll         = 0;    // roll count
                 ialog.bidx.iDMAStart        = 0;    // start of unsaved samples in DMA buffer, all of sample time
                 ialog.bidx.cSavedRoll       = 0;    // unsaved DMA roll count
@@ -50,14 +50,14 @@ static void ALogProcess(IALOG& ialog)
                 // if we are writing to the SD card open the file
                 if(ialog.vol == VOLSD)
                 {
-                    // open the file it should already exist, seek to end                        
-                    if( DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                   != FR_OK    || 
+                    // open the file it should already exist, seek to end
+                    if( DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                   != FR_OK    ||
                         DFATFS::fschdir(DFATFS::szRoot)                                     != FR_OK    ||
                         dFile.fsopen(ialog.szURI, FA_OPEN_EXISTING | FA_WRITE | FA_READ)    != FR_OK    ||
                         dFile.fslseek(dFile.fssize())                                       != FR_OK    )
                     {
                         dFile.fsclose();
-                        ialog.stcd              = STCDError; 
+                        ialog.stcd              = STCDError;
                         ialog.state.processing  = Stopped;
                         ialog.bidx.cBackLog     = 0;
                     }
@@ -69,9 +69,9 @@ static void ALogProcess(IALOG& ialog)
             {
 
                 if(ialog.state.instrument != Idle) ialog.state.instrument = ALOGRun(&ialog);
- 
+
                 if(ialog.vol == VOLSD)
-                { 
+                {
                     const OSC&  osc                 = *((ALOG *) rgInstr[ialog.id])->posc;
                     DFILE&      dFile               = *((DFILE *) ialog.pdFile);
                     uint32_t    tCur                = ReadCoreTimer();
@@ -90,17 +90,17 @@ static void ALogProcess(IALOG& ialog)
                     } while(ialog.bidx.cDMARoll != clDMA);
 
                     // convert to sample index
-                    iDMA /= sizeof(uint16_t);    
+                    iDMA /= sizeof(uint16_t);
 
                     cTotalSampled   = iDMA + LOGDMASIZE * clDMA;
                     cWrittenSampled = ialog.bidx.iDMAStart + LOGDMASIZE * ialog.bidx.cSavedRoll;
                     ialog.bidx.cBackLog = cTotalSampled - cWrittenSampled;
 
-                    // absolutely should not happen; 
+                    // absolutely should not happen;
                     ASSERT(cTotalSampled >= cWrittenSampled);
 
                     // The cBackLog should be < 100,000 worst case, but allow whatever
-                    // but we can not wrap as cBackLog is an int32, the cTotalSampled/cWrittenSampled counters are uint64 
+                    // but we can not wrap as cBackLog is an int32, the cTotalSampled/cWrittenSampled counters are uint64
                     ASSERT(ialog.bidx.cBackLog >= 0);
 
                     // back log counter
@@ -161,13 +161,13 @@ static void ALogProcess(IALOG& ialog)
                     {
                         // open the file if it needs to be open
                         if(!dFile && ialog.stcd == STCDNormal &&
-                            (DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                  != FR_OK    || 
+                            (DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                  != FR_OK    ||
                              DFATFS::fschdir(DFATFS::szRoot)                                    != FR_OK    ||
                              dFile.fsopen(ialog.szURI, FA_OPEN_EXISTING | FA_WRITE | FA_READ)   != FR_OK    ))
                         {
                             dFile.fsclose();
                             ALOGStop(&ialog);
-                            ialog.stcd              = STCDError; 
+                            ialog.stcd              = STCDError;
                         }
 
                         // write to the file
@@ -187,7 +187,7 @@ static void ALogProcess(IALOG& ialog)
                             if(dFile.fswrite(rgu16, cThisTime*sizeof(uint16_t), &cbWritten, LOGMAXSECTORWRT) != FR_OK)
                             {
                                 ALOGStop(&ialog);
-                                ialog.stcd              = STCDError; 
+                                ialog.stcd              = STCDError;
                             }
 
                             ialog.tStart = tCur;         // restart the timer
@@ -203,7 +203,7 @@ static void ALogProcess(IALOG& ialog)
 
                             // counters
                             maxLogWrittenCnt = max(maxLogWrittenCnt, cbWritten);
-                            if(cLogWrite == 1000) 
+                            if(cLogWrite == 1000)
                             {
                                 aveLogWrite = ((999ll * ((uint64_t) aveLogWrite)) + cbWritten) / 1000;
                             }
@@ -217,10 +217,10 @@ static void ALogProcess(IALOG& ialog)
                         {
                             dFile.fsclose();
                             ALOGStop(&ialog);
-                            ialog.stcd              = STCDError; 
+                            ialog.stcd              = STCDError;
                         }
                     }
-            
+
                     // finish and get out
                     else if(ialog.state.instrument == Idle)
                     {
@@ -235,19 +235,19 @@ static void ALogProcess(IALOG& ialog)
                             ialog.bidx.cDMARoll     = ialog.bidx.cSavedRoll;
                             ialog.bidx.cBackLog     = 0;
                         }
- 
+
                         ASSERT(ialog.bidx.cBackLog == 0);
                         ASSERT(ialog.bidx.iDMAEnd == ialog.bidx.iDMAStart);
                         ialog.bidx.cTotalSamples = ((int64_t) ialog.bidx.cDMARoll) * LOGDMASIZE + ialog.bidx.iDMAEnd;
 
                         // open the file if it needs to be open
                         if( !dFile &&
-                               (DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                  != FR_OK    || 
+                               (DFATFS::fschdrive(DFATFS::szFatFsVols[ialog.vol])                  != FR_OK    ||
                                 DFATFS::fschdir(DFATFS::szRoot)                                    != FR_OK    ||
                                 dFile.fsopen(ialog.szURI, FA_OPEN_EXISTING | FA_WRITE | FA_READ)   != FR_OK    ))
                         {
                             dFile.fsclose();
-                            ialog.stcd              = STCDError; 
+                            ialog.stcd              = STCDError;
                         }
 
                         // write out the header
@@ -255,16 +255,16 @@ static void ALogProcess(IALOG& ialog)
                         else if(dFile.fslseek(0) == FR_OK)
                         {
                             LogHeader   logHdr  = LogHeader();
-                            uint32_t    cbHdr   = 0;  
+                            uint32_t    cbHdr   = 0;
 
                             logHdr.AHdr.stopReason   = ialog.stcd;
-                            logHdr.AHdr.iStart       = 0;             
-                            logHdr.AHdr.actualCount  = ialog.bidx.cTotalSamples;        
-                            logHdr.AHdr.uSPS         = ialog.bidx.xsps;               
-                            logHdr.AHdr.psDelay      = ialog.bidx.psDelay;  
+                            logHdr.AHdr.iStart       = 0;
+                            logHdr.AHdr.actualCount  = ialog.bidx.cTotalSamples;
+                            logHdr.AHdr.uSPS         = ialog.bidx.xsps;
+                            logHdr.AHdr.psDelay      = ialog.bidx.psDelay;
                             dFile.fswrite(&logHdr, sizeof(logHdr), &cbHdr, DFILE::FS_INFINITE_SECTOR_CNT);
                         }
-                           
+
                         dFile.fsclose();
                         ialog.state.processing = Stopped;
                         ialog.buffLock = LOCKAvailable;
@@ -286,7 +286,7 @@ static void ALogProcess(IALOG& ialog)
                     ASSERT(ialog.vol == VOLRAM);
 
                     // number of samples taken
-                    if(ialog.bidx.cDMARoll == 0)  
+                    if(ialog.bidx.cDMARoll == 0)
                     {
                         ialog.bidx.iDMAStart        = 0;
                         ialog.bidx.cTotalSamples    = ialog.bidx.iDMAEnd;
@@ -294,7 +294,7 @@ static void ALogProcess(IALOG& ialog)
                     else
                     {
                         ialog.bidx.iDMAStart        = ialog.bidx.iDMAEnd;
-                        ialog.bidx.cTotalSamples    = LOGDMASIZE;        
+                        ialog.bidx.cTotalSamples    = LOGDMASIZE;
                     }
 
                     // convert ADC data to mv
@@ -330,7 +330,7 @@ static void TRGProcess(void)
         case Run:
 
             // get everyone running, to the Armed state
-            for(i=0; i<pjcmd.trigger.cRun; i++) 
+            for(i=0; i<pjcmd.trigger.cRun; i++)
             {
                 if(pjcmd.trigger.rgtte[i].fWorking)
                 {
@@ -357,7 +357,7 @@ static void TRGProcess(void)
                                 pjcmd.trigger.rgtte[i].fWorking = false;
                             }
                             break;
- 
+
                         default:
                             ASSERT(NEVER_SHOULD_GET_HERE);
                             break;
@@ -367,10 +367,10 @@ static void TRGProcess(void)
                     if(IsStateAnError(retState))
                     {
                             pjcmd.trigger.state.processing = Idle;
-                            for(i=0; i<pjcmd.trigger.cRun; i++) 
+                            for(i=0; i<pjcmd.trigger.cRun; i++)
                             {
                                 pjcmd.trigger.rgtte[i].pstate->processing = Idle;
-                                *pjcmd.trigger.rgtte[i].pLockState = LOCKAvailable; 
+                                *pjcmd.trigger.rgtte[i].pLockState = LOCKAvailable;
                             }
                             return;
                     }
@@ -393,7 +393,7 @@ static void TRGProcess(void)
        case Armed:
 
             // wait for everyone to complete
-            for(i=0; i<pjcmd.trigger.cRun; i++) 
+            for(i=0; i<pjcmd.trigger.cRun; i++)
             {
                 if(pjcmd.trigger.rgtte[i].fWorking)
                 {
@@ -423,7 +423,7 @@ static void TRGProcess(void)
                                 pjcmd.ila.acqCount = pjcmd.trigger.acqCount;
                             }
                             break;
- 
+
                         // these can only be triggers, but we still have to get them running
                         default:
                             ASSERT(NEVER_SHOULD_GET_HERE);
@@ -434,10 +434,10 @@ static void TRGProcess(void)
                     if(IsStateAnError(retState))
                     {
                             pjcmd.trigger.state.processing = Idle;
-                            for(i=0; i<pjcmd.trigger.cRun; i++) 
+                            for(i=0; i<pjcmd.trigger.cRun; i++)
                             {
                                 pjcmd.trigger.rgtte[i].pstate->processing = Idle;
-                                *pjcmd.trigger.rgtte[i].pLockState = LOCKAvailable; 
+                                *pjcmd.trigger.rgtte[i].pLockState = LOCKAvailable;
                             }
                             return;
                     }
@@ -467,14 +467,14 @@ static void TRGProcess(void)
                         // OSC conversion time.
                         deltaPS = GetPicoSec(pjcmd.trigger.indexBuff - pjcmd.ila.bidx.iDMATrig, pjcmd.ila.bidx.xsps, 1000) + ADCpsDELAY;
                         break;
- 
+
                     default:
                         ASSERT(NEVER_SHOULD_GET_HERE);
                         break;
                 }
 
                 // Adjust the buffers to align to where we want them.
-                for(i=0; i<pjcmd.trigger.cRun; i++) 
+                for(i=0; i<pjcmd.trigger.cRun; i++)
                 {
                     switch(pjcmd.trigger.rgtte[i].instrID)
                     {
@@ -493,21 +493,21 @@ static void TRGProcess(void)
                             break;
 
                         case LOGIC1_ID:
-                            // remember we are OSC based in timing of the result buffers. BUT, there is a delay between when the signal hits the ADC and when the 
+                            // remember we are OSC based in timing of the result buffers. BUT, there is a delay between when the signal hits the ADC and when the
                             // DMA moves it into the result buffer, that is the conversion time. Ideally we would add this time as a delay to the ADCs, but since there are 2
-                            // ADCs and only 1 LA, we can just subtract this time from the LA to align the LA result buffer to the ADC result buffer. 
+                            // ADCs and only 1 LA, we can just subtract this time from the LA to align the LA result buffer to the ADC result buffer.
                             ScrollBuffer(pjcmd.ila.pBuff, pjcmd.ila.bidx.cDMA, pjcmd.ila.bidx.iTrigDMA, (pjcmd.ila.bidx.iDMATrig + (int32_t) GetSamples(deltaPS - ADCpsDELAY, pjcmd.ila.bidx.xsps, 1000)));
 
                             pjcmd.ila.state.processing = Triggered;
                             pjcmd.ila.buffLock = LOCKAvailable;
                             break;
- 
+
                         default:
                             ASSERT(NEVER_SHOULD_GET_HERE);
                             break;
                     }
                 }
-                
+
                 pjcmd.trigger.state.processing = Triggered;
             }
             break;
@@ -537,7 +537,7 @@ static void AWGProcess(void)
             }
             else if(IsStateAnError(pjcmd.iawg.state.instrument))
             {
-                pjcmd.iawg.state.processing = Idle;    
+                pjcmd.iawg.state.processing = Idle;
             }
             break;
 
@@ -548,7 +548,7 @@ static void AWGProcess(void)
             }
             else if(IsStateAnError(pjcmd.iawg.state.instrument))
             {
-                pjcmd.iawg.state.processing = Idle;    
+                pjcmd.iawg.state.processing = Idle;
             }
             break;
 
@@ -584,10 +584,10 @@ static void LAProcess(void)
         case JSPARLaStop:
             {
                 LA& la = *((LA *) rgInstr[LOGIC1_ID]);
-                
+
                 // turn off the DMA
                 T7CONbits.ON = 0;
-                la.pDMA->DCHxCON.CHEN    = 0; 
+                la.pDMA->DCHxCON.CHEN    = 0;
 
                 // wait for it not to be busy
                 while(la.pDMA->DCHxCON.CHBUSY);
@@ -596,7 +596,7 @@ static void LAProcess(void)
                 pjcmd.ila.state.processing = Idle;
             }
             break;
-            
+
         default:
             ASSERT(NEVER_SHOULD_GET_HERE);
             break;
@@ -635,7 +635,7 @@ static void Calibrate(void)
 
         // Calibrate the system
         case JSPARCalibrationStart:
-            if((pjcmd.iCal.state.instrument = CFGCalibrateInstruments(instrGrp)) == Idle) 
+            if((pjcmd.iCal.state.instrument = CFGCalibrateInstruments(instrGrp)) == Idle)
             {
                 pjcmd.iCal.state.processing     = Idle;
 
@@ -684,7 +684,7 @@ static void Calibrate(void)
             }
 
             // are we done
-            if(pjcmd.iCal.state.instrument == Idle || IsStateAnError(pjcmd.iCal.state.instrument)) 
+            if(pjcmd.iCal.state.instrument == Idle || IsStateAnError(pjcmd.iCal.state.instrument))
             {
                 pjcmd.iCal.state.processing     = Idle;
             }
@@ -709,7 +709,7 @@ static void Calibrate(void)
             }
 
             // are we done
-            if(pjcmd.iCal.state.instrument == Idle || IsStateAnError(pjcmd.iCal.state.instrument)) 
+            if(pjcmd.iCal.state.instrument == Idle || IsStateAnError(pjcmd.iCal.state.instrument))
             {
                 pjcmd.iCal.state.processing     = Idle;
             }
@@ -732,7 +732,7 @@ static void EnterBootloader(void)
             pjcmd.iBoot.tStart = SYSGetMilliSecond();
             pjcmd.iBoot.processing = Waiting;
             break;
- 
+
         case Waiting:
             if(SYSGetMilliSecond() - pjcmd.iBoot.tStart > 1000)
             {
@@ -751,6 +751,7 @@ static void EnterBootloader(void)
     }
 }
 
+#ifdef USE_WIFI
 static void WiFi(void)
 {
     switch(pjcmd.iWiFi.state.processing)
@@ -769,7 +770,7 @@ static void WiFi(void)
                 pjcmd.iWiFi.fWorking            = false;
             }
             break;
-           
+
         case JSPARNicConnect:
             {
                 WiFiConnectInfo& wifiConn = pjcmd.iWiFi.fWorking ? pjcmd.iWiFi.wifiWConn : pjcmd.iWiFi.wifiAConn;
@@ -803,7 +804,7 @@ static void WiFi(void)
             break;
 
         case JSPARWiFiLoadParameters:
-            
+
             if((pjcmd.iWiFi.state.instrument = WiFiLoadConnInfo(dWiFiFile, pjcmd.iWiFi.vol, pjcmd.iWiFi.szSSID, pjcmd.iWiFi.wifiWConn)) == Idle || IsStateAnError(pjcmd.iWiFi.state.instrument))
             {
                 pjcmd.iWiFi.state.processing = Idle;
@@ -815,13 +816,15 @@ static void WiFi(void)
             break;
     }
 }
+#endif
 
 STATE JSONCmdTask(void)
 {
     EnterBootloader();
     Calibrate();
+#ifdef USE_WIFI
     WiFi();
-
+#endif
     DCProcess(pjcmd.idcCh1);
     DCProcess(pjcmd.idcCh2);
 
@@ -837,6 +840,6 @@ STATE JSONCmdTask(void)
     ALogProcess(pjcmd.iALog2);
 
     Serial.PeriodicTask(&DCH1CON);
-    
+
     return(Idle);
 }

@@ -23,21 +23,21 @@ STATE MState = MSysInit;
 int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv) {
     STATE retState = Idle;
     static uint32_t tStart = 0;
-    
+
     InitInstruments();
-    
-    // We need to wait for the Arduino IDE to open the COM port 
+
+    // We need to wait for the Arduino IDE to open the COM port
     // if the Serial Monitor is open after the reset
     tStart = SYSGetMilliSecond();
     while(SYSGetMilliSecond() - tStart < 500);
-    
+
     Serial.begin(SERIALBAUDRATE);
     Serial.print("OpenScope v");
     Serial.println(szProgVersion);
     Serial.println("Written by: Keith Vogel, Digilent Inc.");
     Serial.println("Copyright 2016 Digilent Inc.");
     Serial.println();
-    
+
     while (1) {
         switch (MState) {
 
@@ -98,17 +98,17 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv) 
                 break;
 
             case MReadCalibrationInfo:
-               
+
                 // This should not fail
                 // if nothing is found, default values are loaded
-                if(CFGGetCalibrationInfo(instrGrp) == Idle) 
+                if(CFGGetCalibrationInfo(instrGrp) == Idle)
                 {
                     Serial.print("Using calibration from: ");
                     Serial.println(rgCFGNames[((IDHDR *) rgInstr[DCVOLT1_ID])->cfg]);
                     MState = MLookUpWiFi;
                 }
                 break;
-
+#ifdef USE_WIFI
             case MLookUpWiFi:
                 if ((retState = WiFiLookupConnInfo(dWiFiFile, pjcmd.iWiFi.wifiWConn)) == Idle) {
                     Serial.print("Found parameter for AP: ");
@@ -145,7 +145,7 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv) 
 //                    MState = Calibrating;
                 }
                 break;
-
+#endif
             case Calibrating:
 //                if(OSCCalibrate(rgInstr[OSC1_ID], rgInstr[OSC1_DC_ID]) == Idle)
                 if(AWGCalibrate(rgInstr[AWG1_ID]) == Idle)

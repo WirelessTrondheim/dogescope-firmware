@@ -41,7 +41,7 @@ OBJFILES_:= AWG.c.o AnalogIn.c.o DCInstruments.c.o FeedBack.c.o LA.c.o\
            wf_timer_stub.cpp.o wf_ud_state.cpp.o Config.cpp.o GlobalData.cpp.o\
            Helper.cpp.o IO.cpp.o Initialize.cpp.o LEDs.cpp.o LexJSON.cpp.o\
            LoopStats.cpp.o MfgTest.cpp.o OSSerial.cpp.o OpenScope.cpp.o\
-           ParseOpenScope.cpp.o ProcessJSONCmd.cpp.o WiFi.cpp.o main.cpp.o\
+           ParseOpenScope.cpp.o ProcessJSONCmd.cpp.o main.cpp.o\
            DEIPcK.cpp.o TCPServer.cpp.o TCPSocket.cpp.o UDPServer.cpp.o\
            UDPSocket.cpp.o DEWFcK.cpp.o DFATFS.cpp.o fs_diskio.cpp.o\
            DMASerial.cpp.o DSDVOL.cpp.o DSPI.cpp.o FLASHVOL.cpp.o\
@@ -76,13 +76,13 @@ clean:
 
 OpenScope.cpp: OpenScope.ino
 	echo "#include <Arduino.h>" > $@
-	echo "#line 1 \"$(PWD)/$<\"" >> $@	
+	echo "#line 1 \"$(PWD)/$<\"" >> $@
 	echo "#line 1 \"$(PWD)/$<\"" >> $@
 	cat $< >> $@
 
 
 build/core/core.a: ${COREOBJFILES}
-	${RM} $@ 
+	${RM} $@
 	$(foreach COREOBJFILE, $^, ${AR} rcs $@ $(COREOBJFILE);)
 
 
@@ -165,4 +165,3 @@ build/%.c.o: libraries/DEIPcK/utility/%.c
 
 build/%.c.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
