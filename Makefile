@@ -104,65 +104,86 @@ OpenScope.ino.hex: OpenScope.ino.elf
 	${BIN2HEX} -a  $<
 
 build/core/%.S.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/%.S
+	@mkdir -p $(@D)
 	$(CXX) $(CXXARFLAGS) -c $< -o $@
 
 build/core/%.c.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/core/%.cpp.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/cores/pic32/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/core/%.c.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: %.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: %.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DEWFcK/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DFATFS/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DMASerial/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/MRF24G/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/HTTPServer/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/FLASHVOL/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DSPI/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DSDVOL/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.c.o: libraries/MRF24G/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: libraries/FLASHVOL/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/DEIPcK/%.cpp
+	@mkdir -p $(@D)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/MRF24G/utility/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: libraries/DFATFS/utility/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: libraries/DEIPcK/utility/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: ${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope/%.c
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
