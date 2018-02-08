@@ -52,7 +52,9 @@ uint8_t uartBuff[512];
 
 // the serial object (AND ISR)
 OSSerialOBJ(Serial, uartBuff, sizeof(uartBuff), 5, 0, 4);
-
+#ifndef USE_WIFI
+#define MACNONE {0x00,0x00,0x00,0x00,0x00,0x00}
+#endif
 /************************************************************************/
 /*    WiFi Objects                                                      */
 /************************************************************************/
@@ -107,7 +109,7 @@ static const HINSTR hDLOG1 = HINSTRFromInstr(dlog1Data);
 
 
 // very carefully constructed... this is just a list of instruments to be calibrated
-// however.... if you are calibrating a OSC, you must follow it with the DC output that 
+// however.... if you are calibrating a OSC, you must follow it with the DC output that
 // is connected to it. For best results, you should ensure the DC outputs are calibrated first,
 // that is either previousely calibrated, or calibrated earlier in the list of instruments to calibrate.
 // The DC instruments specified immedately after the OSC, will not be calibrated, they are just
@@ -137,26 +139,26 @@ uint16_t    __attribute__((coherent, keep, address(0x80070000))) rgLOGICBuff[LAB
 /********************** Instrument Initialization Constants *************/
 /************************************************************************/
 /************************************************************************/
-uint32_t const dcInitData[2][2] = 
+uint32_t const dcInitData[2][2] =
 {
-    {(uint32_t) &OC6CON, CH_DC1_FB}, 
+    {(uint32_t) &OC6CON, CH_DC1_FB},
     {(uint32_t) &OC4CON, CH_DC2_FB}
 };
 
-uint32_t const oscInitData[2][12] = 
+uint32_t const oscInitData[2][12] =
 {
     {
         (uint32_t) &OC8CON,                         // Offset PWM
-        (uint32_t) &LATA, (0x00000001 << 2),        // Gain select 1      
+        (uint32_t) &LATA, (0x00000001 << 2),        // Gain select 1
         (uint32_t) &LATA, (0x00000001 << 3),        // Gain select 2
         0, 1,                                       // ADC channels
         (uint32_t) &T3CON,                          // DMA trigger timer
         (uint32_t) &OC5CON,                         // DMA interleave trigger OC
         (uint32_t) &DCH3CON, (uint32_t) &DCH4CON,   // DMA channels
-    }, 
+    },
     {
         (uint32_t) &OC9CON,                         // Offset PWM
-        (uint32_t) &LATA, (0x00000001 << 6),        // Gain select 1      
+        (uint32_t) &LATA, (0x00000001 << 6),        // Gain select 1
         (uint32_t) &LATA, (0x00000001 << 7),        // Gain select 2
         2, 3,                                       // ADC channels
         (uint32_t) &T5CON,                          // DMA trigger timer

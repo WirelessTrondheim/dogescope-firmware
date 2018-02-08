@@ -27,28 +27,17 @@ CXXARFLAGS:=-g1 -O0 -Wa,--gdwarf-2 -mprocessor=32MZ2048EFG124 -DF_CPU=200000000U
             -I${HOME}/.arduino15/packages/Digilent/hardware/pic32/1.0.3/variants/OpenScope
 
 OBJFILES_:= AWG.c.o AnalogIn.c.o DCInstruments.c.o FeedBack.c.o LA.c.o\
-           OSMath.c.o TimeOutTmr9.c.o Trigger.c.o Version.c.o DHCP.c.o\
-           DNS.c.o HeapMgr.c.o ICMP.c.o IPStack.c.o InternetLayer.c.o\
-           LinkLayer.c.o SNTPv4.c.o System.c.o TCP.c.o TCPRFC793.c.o\
-           TCPStateMachine.c.o UDP.c.o ccsbcs.c.o fs_ff.c.o flash.c.o\
-           MRF24GAdaptor.c.o wf_connection_algorithm.cpp.o\
-           wf_connection_profile.cpp.o wf_data_msg.cpp.o\
-           wf_eint.cpp.o wf_eint_stub.cpp.o wf_event_queue.cpp.o\
-           wf_event_stub.cpp.o wf_gpio_stub.cpp.o wf_init.cpp.o\
-           wf_mgmt_msg.cpp.o wf_param_msg.cpp.o wf_pbkdf2.cpp.o\
-           wf_pll.cpp.o wf_power.cpp.o wf_raw.cpp.o wf_registers.cpp.o\
-           wf_scan.cpp.o wf_spi_stub.cpp.o wf_task.cpp.o wf_timer.cpp.o\
-           wf_timer_stub.cpp.o wf_ud_state.cpp.o Config.cpp.o GlobalData.cpp.o\
+           OSMath.c.o TimeOutTmr9.c.o Trigger.c.o Version.c.o\
+					 System.c.o ccsbcs.c.o fs_ff.c.o flash.c.o\
+           Config.cpp.o GlobalData.cpp.o\
            Helper.cpp.o IO.cpp.o Initialize.cpp.o LEDs.cpp.o LexJSON.cpp.o\
            LoopStats.cpp.o MfgTest.cpp.o OSSerial.cpp.o OpenScope.cpp.o\
            ParseOpenScope.cpp.o ProcessJSONCmd.cpp.o main.cpp.o\
-           DEIPcK.cpp.o TCPServer.cpp.o TCPSocket.cpp.o UDPServer.cpp.o\
-           UDPSocket.cpp.o DEWFcK.cpp.o DFATFS.cpp.o fs_diskio.cpp.o\
+           DFATFS.cpp.o fs_diskio.cpp.o\
            DMASerial.cpp.o DSDVOL.cpp.o DSPI.cpp.o FLASHVOL.cpp.o\
            HTMLDefaultPage.cpp.o HTMLOptions.cpp.o HTMLPostCmd.cpp.o\
            HTMLReboot.cpp.o HTMLSDPage.cpp.o HTTPHelpers.cpp.o\
-           ProcessClient.cpp.o\
-           DEMRF24G.cpp.o Board_Data.c.o EFADC.c.o
+           Board_Data.c.o EFADC.c.o
 
 OBJFILES:= $(addprefix build/,${OBJFILES_})
 
