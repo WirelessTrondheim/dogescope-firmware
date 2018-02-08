@@ -461,7 +461,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UISetOSCGain;
             }
             break;
-
+#ifdef USE_WIFI
         /************************************************************************/
         /************************************************************************/
         /******************************** WiFi Scan *****************************/
@@ -482,7 +482,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 pjcmd.iWiFi.wifiScan.iNetwork = 0;
                 state = UIWiFiScan;
             }
-
+#endif
         case UIWaitForShutdownReply:
             if(Serial.available() > 0)
             {
@@ -529,7 +529,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-#endif
+
         /************************************************************************/
         /************************************************************************/
         /********************** Walk the Scan data ******************************/
@@ -555,7 +555,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = endScanWalk;
             }
             break;
-#ifdef USE_WIFI
+
         /************************************************************************/
         /************************************************************************/
         /********************** WiFi connect / disconnect ***********************/
@@ -1225,7 +1225,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 }
             }
            break;
-
+#ifdef USE_WIFI
         case UICalculatePSKey:
             if(deIPcK.wpaCalPSK(wifiConn.ssid, szInput, wifiConn.key.wpa2Key))
             {
@@ -1242,7 +1242,7 @@ STATE UIMainPage(DFILE& dFile, VOLTYPE const wifiVol, WiFiConnectInfo& wifiConn)
                 state = UIManageWiFi;
             }
             break;
-
+#endif
         case UIAskToAutoSave:
                 Serial.println("Would you like to auto-connect to this network? Y/N");
                 state = UIReadAutoConnect;

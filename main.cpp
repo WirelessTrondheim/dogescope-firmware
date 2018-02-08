@@ -164,7 +164,9 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char** argv) 
         }
 
         // loop services
+#ifdef USE_WIFI
         HTTPTask();                 // Keep the HTTP Server alive
+#endif
         DEIPcK::periodicTasks();    // Keep Stack alive
         LEDTask();
         CFGSdHotSwapTask();

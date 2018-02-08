@@ -47,7 +47,7 @@ OBJFILES_:= AWG.c.o AnalogIn.c.o DCInstruments.c.o FeedBack.c.o LA.c.o\
            DMASerial.cpp.o DSDVOL.cpp.o DSPI.cpp.o FLASHVOL.cpp.o\
            HTMLDefaultPage.cpp.o HTMLOptions.cpp.o HTMLPostCmd.cpp.o\
            HTMLReboot.cpp.o HTMLSDPage.cpp.o HTTPHelpers.cpp.o\
-           ProcessClient.cpp.o ProcessServer.cpp.o deOpenScopeWebServer.cpp.o\
+           ProcessClient.cpp.o\
            DEMRF24G.cpp.o Board_Data.c.o EFADC.c.o
 
 OBJFILES:= $(addprefix build/,${OBJFILES_})

@@ -14,7 +14,7 @@
 #include    <OpenScope.h>
 
 STATE LEDTask(void)
-{   
+{
     static  uint32_t    tBtn            = 0;
     static  bool        fBtn            = false;
     static  uint32_t    tLed            = SYSGetMilliSecond();
@@ -26,8 +26,8 @@ STATE LEDTask(void)
     static  bool        fBlockIOBusL    = false;
     static  bool        fNoLEDs         = false;
             bool        fBlink          = false;
-            bool        fStopBlink      =   pjcmd.trigger.state.processing == Run || pjcmd.trigger.state.processing == Armed || 
-                                            pjcmd.iCal.state.processing == JSPARCalibrationStart || 
+            bool        fStopBlink      =   pjcmd.trigger.state.processing == Run || pjcmd.trigger.state.processing == Armed ||
+                                            pjcmd.iCal.state.processing == JSPARCalibrationStart ||
                                             pjcmd.iALog1.state.processing == Running || pjcmd.iALog2.state.processing == Running;
 
     /* ------------------------------------------------------------ */
@@ -56,7 +56,7 @@ STATE LEDTask(void)
     {
         fBtn = false;
     }
-            
+
     /* ------------------------------------------------------------ */
     /*					LED Processing           					*/
     /* ------------------------------------------------------------ */
@@ -67,18 +67,18 @@ STATE LEDTask(void)
 
         if(fNoLEDs)
         {
-            SetGPIO(PIN_LED_1, 1);                  
+            SetGPIO(PIN_LED_1, 1);
         }
         else
         {
-            SetGPIO(PIN_LED_1, 0);                  
+            SetGPIO(PIN_LED_1, 0);
             tLed    = SYSGetMilliSecond();
             fBlink  = false;
         }
 
         SetGPIO(PIN_LED_2, 0);
         SetGPIO(PIN_LED_3, 0);
-        SetGPIO(PIN_LED_4, 0);    
+        SetGPIO(PIN_LED_4, 0);
     }
 
     if(fNoLEDs)
@@ -124,7 +124,7 @@ STATE LEDTask(void)
         // if we are up and running
         if(MState == MLoop)
         {
-
+#ifdef USE_WIFI
             // if wifi is ready
             if(deIPcK.isIPReady())
             {
@@ -164,7 +164,7 @@ STATE LEDTask(void)
                     if(j < ip3) SetGPIO(PIN_LED_3, 1);
                 }
 
-                if(j>=ip1 && j>=ip2 && j>=ip3) 
+                if(j>=ip1 && j>=ip2 && j>=ip3)
                 {
                     i = 0;
                 }
@@ -176,6 +176,7 @@ STATE LEDTask(void)
 
             // no wifi, but we are ready over COM
             else
+#endif
             {
                     SetGPIO(PIN_LED_4, !GetGPIO(PIN_LED_4));
             }
@@ -194,4 +195,3 @@ STATE LEDTask(void)
 
     return(Idle);
 }
-
