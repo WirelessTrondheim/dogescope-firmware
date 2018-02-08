@@ -28,15 +28,13 @@ CXXARFLAGS:=-g1 -O0 -Wa,--gdwarf-2 -mprocessor=32MZ2048EFG124 -DF_CPU=200000000U
 
 OBJFILES_:= AWG.c.o AnalogIn.c.o DCInstruments.c.o FeedBack.c.o LA.c.o\
            OSMath.c.o TimeOutTmr9.c.o Trigger.c.o Version.c.o\
-					 System.c.o ccsbcs.c.o fs_ff.c.o flash.c.o\
+           System.c.o ccsbcs.c.o fs_ff.c.o flash.c.o\
            Config.cpp.o GlobalData.cpp.o\
            Helper.cpp.o IO.cpp.o Initialize.cpp.o LEDs.cpp.o LexJSON.cpp.o\
            LoopStats.cpp.o MfgTest.cpp.o OSSerial.cpp.o OpenScope.cpp.o\
            ParseOpenScope.cpp.o ProcessJSONCmd.cpp.o main.cpp.o\
            DFATFS.cpp.o fs_diskio.cpp.o\
            DMASerial.cpp.o DSDVOL.cpp.o DSPI.cpp.o FLASHVOL.cpp.o\
-           HTMLDefaultPage.cpp.o HTMLOptions.cpp.o HTMLPostCmd.cpp.o\
-           HTMLReboot.cpp.o HTMLSDPage.cpp.o HTTPHelpers.cpp.o\
            Board_Data.c.o EFADC.c.o
 
 OBJFILES:= $(addprefix build/,${OBJFILES_})
@@ -110,40 +108,22 @@ build/%.c.o: %.c
 build/%.cpp.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-build/%.cpp.o: libraries/DEWFcK/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
 build/%.cpp.o: libraries/DFATFS/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+#
 build/%.cpp.o: libraries/DMASerial/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-build/%.cpp.o: libraries/MRF24G/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-build/%.cpp.o: libraries/HTTPServer/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 build/%.cpp.o: libraries/FLASHVOL/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+#
 build/%.cpp.o: libraries/DSPI/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+#
 build/%.cpp.o: libraries/DSDVOL/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-build/%.c.o: libraries/MRF24G/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
 build/%.c.o: libraries/FLASHVOL/%.c
-	$(CC) $(CFLAGS) -c $< -o $@
-
-build/%.cpp.o: libraries/DEIPcK/%.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
-
-build/%.cpp.o: libraries/MRF24G/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 build/%.c.o: libraries/DFATFS/utility/%.c
