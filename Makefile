@@ -108,12 +108,21 @@ build/%.c.o: %.c
 build/%.cpp.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# build/%.cpp.o: libraries/DEWFcK/%.cpp
+# 	$(CXX) $(CXXFLAGS) -c $< -o $@
+#
 build/%.cpp.o: libraries/DFATFS/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 #
 build/%.cpp.o: libraries/DMASerial/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+#
+# build/%.cpp.o: libraries/MRF24G/%.cpp
+# 	$(CXX) $(CXXFLAGS) -c $< -o $@
+#
+# build/%.cpp.o: libraries/HTTPServer/%.cpp
+# 	$(CXX) $(CXXFLAGS) -c $< -o $@
+#
 build/%.cpp.o: libraries/FLASHVOL/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 #
@@ -122,13 +131,22 @@ build/%.cpp.o: libraries/DSPI/%.cpp
 #
 build/%.cpp.o: libraries/DSDVOL/%.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
-
+#
+# build/%.c.o: libraries/MRF24G/%.c
+# 	$(CC) $(CFLAGS) -c $< -o $@
+#
 build/%.c.o: libraries/FLASHVOL/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
+#
+# build/%.cpp.o: libraries/DEIPcK/%.cpp
+# 	$(CXX) $(CXXFLAGS) -c $< -o $@
+#
+# build/%.cpp.o: libraries/MRF24G/utility/%.c
+# 	$(CC) $(CFLAGS) -c $< -o $@
+#
 build/%.c.o: libraries/DFATFS/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
+#
 build/%.c.o: libraries/DEIPcK/utility/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
